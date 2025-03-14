@@ -45,19 +45,15 @@ const TodoContextProvider = ({ children }: { children: React.ReactNode }) => {
     useContractEvents();
 
 
-    const formatEnum = (value: number): string => {
+    const formatEnum = useCallback((value: number): string => {
         const status = Number(value);
         switch (status) {
-            case 1:
-                return "Created";
-            case 2:
-                return "Edited";
-            case 3:
-                return "Completed";
-            default:
-                return "Pending";
+            case 1: return "Created";
+            case 2: return "Edited";
+            case 3: return "Completed";
+            default: return "Pending";
         }
-    }
+    }, []);
 
     const getTodos = useCallback(async () => {
         if (!readOnlyTodoContract) return;
@@ -74,7 +70,7 @@ const TodoContextProvider = ({ children }: { children: React.ReactNode }) => {
         } catch (error) {
             console.log("Error fetching todos", error);
         }
-    }, [readOnlyTodoContract])
+    }, [readOnlyTodoContract, formatEnum]);
 
     useEffect(() => {
         getTodos();
