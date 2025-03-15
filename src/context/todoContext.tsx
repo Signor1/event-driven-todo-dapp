@@ -103,11 +103,18 @@ const TodoContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Listen for TodoCreated events
     useContractEvent<TodoCreatedPayload>("TodoCreated", (payload) => {
-        setTodos((prevState) => [...prevState, {
-            title: payload.title,
-            description: payload.description,
-            status: formatEnum(payload.status),
-        }]);
+        setTodos(prevState => {
+            const exists = prevState.some(todo =>
+                todo.title === payload.title &&
+                todo.description === payload.description &&
+                todo.status === formatEnum(payload.status)
+            );
+            return exists ? prevState : [...prevState, {
+                title: payload.title,
+                description: payload.description,
+                status: formatEnum(payload.status),
+            }];
+        });
     });
 
 
